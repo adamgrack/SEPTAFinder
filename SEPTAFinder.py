@@ -1,6 +1,8 @@
 import zipfile
 import os
+import json
 import fiona
+import shapely
 import pandas as pd
 import geopandas as gpd
 from bs4 import BeautifulSoup
@@ -8,8 +10,8 @@ from math import radians, cos, sin, asin, sqrt
 
 
 # setup file path for kmz file extraction
-kmz_file_path = "C:/Users/grayh/NETCoreApps/SEPTAFinder/Data/SEPTARegionalRailStations2016.kmz"
-extraction_dir = os.path.dirname("C:/Users/grayh/NETCoreApps/SEPTAFinder/Data/SEPTARegionalRailStations2016.kmz")
+kmz_file_path = "./Data/SEPTARegionalRailStations2016.kmz"
+extraction_dir = os.path.dirname("./Data/SEPTARegionalRailStations2016.kmz")
 
 with zipfile.ZipFile(kmz_file_path, "r") as kmz:
     kmz.extractall(extraction_dir)
@@ -19,7 +21,7 @@ fiona.drvsupport.supported_drivers['libkml'] = 'rw'
 fiona.drvsupport.supported_drivers['LIBKML'] = 'rw'
 
 # grab kml filepath and hold as a global for use in getting the locations of septa stops
-fp = "C:/Users/grayh/NETCoreApps/SEPTAFinder/Data/doc.kml"
+fp = "./Data/doc.kml"
 
 # use file reader to read each septa location and save to an array
 def getSeptaLocations()->gpd.GeoDataFrame:
@@ -39,22 +41,29 @@ def distance(lat1, long1, lat2, long2)->float:
     km = 6371 * c
     return km
 
-# return the location of the closest septa station
-def determineClosestStation(listOfLocations: gpd.GeoDataFrame, location = []):
-    closestLocation = []
-    listOfLocations.value
-    for septaStops in listOfLocations['geometry']:
-        closestLocation = septaStops if distance(septaStops[0], septaStops[1], location[0], location[1]) < distance(closestLocation[0], closestLocation[1], location[0], location[1]) else closestLocation
+# take geodataframe and comparative point
+# return dictionary of the closest point
+def determineClosestStation(listOfLocations: gpd.GeoDataFrame, location: shapely.Point):
+    closestLocation = {
+        "Name": "",
+        "Description": "",
+        "geometry": shapely.Point(0, 0)
+    }
+    locationPoint: shapely.Point
+    
+    for septaStops in listOfLocations.iterrows():
+        locationPoint = septaStops[1]['geometry']
+        closestLocation = ({"Name": septaStops[1]['Name'], "Description": septaStops[1]['Description'], "geometry": septaStops[1]['geometry']} if distance(locationPoint.x, locationPoint.y, location.x, location.y) <
+            distance(closestLocation["geometry"].x, closestLocation["geometry"].y, location.x, location.y) else closestLocation)
 
     return closestLocation
 
-def FindClosestSepta (location = []):
+def main (location: shapely.Point):
     septaList: gpd.GeoDataFrame 
     septaList = getSeptaLocations()
-    print(septaList.loc[0])
 
-    #return determineClosestStation(septaList, location)
+    return determineClosestStation(septaList, location)
 
-latLong = ["41.205", "24.202"]
+latLong = shapely.Point(-74.205, 44.202)
 
-location = FindClosestSepta(latLong)
+location = main(latLong)
