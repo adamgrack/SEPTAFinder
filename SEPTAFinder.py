@@ -44,6 +44,7 @@ def distance(lat1, long1, lat2, long2)->float:
 # take geodataframe and comparative point
 # return dictionary of the closest point
 def determineClosestStation(listOfLocations: gpd.GeoDataFrame, location: shapely.Point):
+    # defaulting values to the first in list so there is not a chance of a default that isn't on the list being closest to the input point
     closestLocation = {
         "Name": listOfLocations.loc[0, 'Name'],
         "Description": listOfLocations.loc[0, 'Description'],
