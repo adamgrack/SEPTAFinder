@@ -66,7 +66,3 @@ def SEPTAFinder (location: shapely.Point):
     closestLocationJson = gpd.GeoDataFrame(closestLocation, index=[0]).to_json()
     
     return closestLocationJson
-
-latLong = shapely.Point(-74.205, 44.202)
-
-location = SEPTAFinder(latLong)
