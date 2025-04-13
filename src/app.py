@@ -10,8 +10,8 @@ def home():
 
 @app.route("/get-nearest-station/<coords>", methods=["GET"])
 def get_nearest_station(coords):
-    _coords_ = Point(coords[0], coords[1])
-    return SEPTAFinder.SEPTAFinder(_coords_)
+    _coords_ = str.split(coords, ',')
+    return SEPTAFinder.SEPTAFinder(Point(float(_coords_[0]), float(_coords_[1])))
 
 if __name__ == "__main__":
     app.run(debug=True)
