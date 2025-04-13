@@ -2,9 +2,7 @@ import zipfile
 import os
 import fiona
 import shapely
-import pandas as pd
 import geopandas as gpd
-from bs4 import BeautifulSoup
 from math import radians, cos, sin, asin, sqrt
 
 
@@ -58,6 +56,8 @@ def determineClosestStation(listOfLocations: gpd.GeoDataFrame, location: shapely
     
     return closestLocation
 
+# take shapely Point 
+# return gdf GeoJson closest to the input location
 def SEPTAFinder (location: shapely.Point):
     septaList: gpd.GeoDataFrame 
     septaList = getSeptaLocations()
