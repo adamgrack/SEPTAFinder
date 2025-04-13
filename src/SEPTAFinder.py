@@ -1,6 +1,5 @@
 import zipfile
 import os
-import json
 import fiona
 import shapely
 import pandas as pd
@@ -10,8 +9,8 @@ from math import radians, cos, sin, asin, sqrt
 
 
 # setup file path for kmz file extraction
-kmz_file_path = "./Data/SEPTARegionalRailStations2016.kmz"
-extraction_dir = os.path.dirname("./Data/SEPTARegionalRailStations2016.kmz")
+kmz_file_path = "../Data/SEPTARegionalRailStations2016.kmz"
+extraction_dir = os.path.dirname(kmz_file_path)
 
 with zipfile.ZipFile(kmz_file_path, "r") as kmz:
     kmz.extractall(extraction_dir)
@@ -21,7 +20,7 @@ fiona.drvsupport.supported_drivers['libkml'] = 'rw'
 fiona.drvsupport.supported_drivers['LIBKML'] = 'rw'
 
 # grab kml filepath and hold as a global for use in getting the locations of septa stops
-fp = "./Data/doc.kml"
+fp = "../Data/doc.kml"
 
 # use file reader to read each septa location and save to an array
 def getSeptaLocations()->gpd.GeoDataFrame:
@@ -59,12 +58,15 @@ def determineClosestStation(listOfLocations: gpd.GeoDataFrame, location: shapely
     
     return closestLocation
 
-def main (location: shapely.Point):
+def SEPTAFinder (location: shapely.Point):
     septaList: gpd.GeoDataFrame 
     septaList = getSeptaLocations()
 
-    return determineClosestStation(septaList, location)
+    closestLocation = determineClosestStation(septaList, location)
+    closestLocationJson = gpd.GeoDataFrame(closestLocation, index=[0]).to_json()
+    
+    return closestLocationJson
 
 latLong = shapely.Point(-74.205, 44.202)
 
-location = main(latLong)
+location = SEPTAFinder(latLong)
