@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<head>
+    <h1>Search for the closest SEPTA station to you:</h1>
+</head>
+<body>
+    <input type="number" name='lat' id='lat'/></br>
+    <input type="number" name='long' id='long'/></br>
+    <button id="Search-For-Station">Find Nearest Station</button>
+    <p id='septa-info'></p>
+</body>
+
+<script>
+    button = document.getElementById("Search-For-Station")
+    button.addEventListener("click", searchForStation)
+
+    async function searchForStation() {
+        lat = document.getElementById('lat').value
+        long = document.getElementById('long').value
+        response = await fetch(`/get-nearest-station/${lat},${long}`).then(res => res.json()).then(data => { 
+            console.log(data.features) 
+            return data.features
+        })
+        document.getElementById('septa-info').innerHTML = response[0].properties['Description']
+    }
+</script>
+
+</html>

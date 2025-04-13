@@ -1,13 +1,16 @@
-from flask import Flask, request, jsonify
+from flask import Flask, render_template
 from shapely import Point
 import SEPTAFinder
 
 app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
-def home():
-    return "Home"
+def index():
+    return render_template('index.html')
 
+# call SEPTAFinder using coordinate parameters
+# param format: xxxx,yyyy
+# GET
 @app.route("/get-nearest-station/<coords>", methods=["GET"])
 def get_nearest_station(coords):
     _coords_ = str.split(coords, ',')
