@@ -17,6 +17,12 @@
     async function searchForStation() {
         lat = document.getElementById('lat').value
         long = document.getElementById('long').value
+
+        if(lat === '' || long === ''){
+            document.getElementById('septa-info').innerHTML = 'Invalid latitude/longitude'
+            return
+        }
+
         response = await fetch(`/get-nearest-station/${lat},${long}`).then(res => res.json()).then(data => { 
             console.log(data.features) 
             return data.features
