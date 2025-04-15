@@ -1,0 +1,12 @@
+For this project my approach was to take each element of the end product and create it separately. I haven't used Python outside of university classes, so I was 
+unsure of how to go about most of this. My initial approach was defining the main goal, getting a nearby SEPTA station, so I started with creating SEPTAFinder, and 
+created helper functions from there. As I have not used Python much, there was a lot of time spent looking up basic syntax and learning about things such as conda.
+In addition to learning the basics again, I needed to learn about the geospatial libraries, so GeoPandas' documentation was important for me to learn how to parse
+the GeoDataFrames correctly. Setting up API calls was fairly simple and straight forward after I found Flask, and then there was a quick rundown of old HTML skills
+that I haven't used since university as well.
+
+In terms of how this would be deployed, I believe this would be best deployed as a single service as I have written it. The SEPTAFinder.py acts as a pseudo library,
+but references local data in my Data folder. I would like to deploy using a cloud computing instance, such as AWS's EC2, and from there set up user restrictions with
+their security group functionality on the instance. To make it accessible to a large number of people I would set up an auto scaling group with an application 
+balancer in front to distribute the load across instances. Since I would use AWS, there comes built in usage metrics that can be monitored and set to alert for 
+activity thresholds.
